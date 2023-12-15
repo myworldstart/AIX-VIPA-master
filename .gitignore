@@ -1,0 +1,15 @@
+.DS_Store
+
+.idea/*.xml
+.idea/*.iml
+.idea/*/*.xml
+
+models/
+
+model_data/
+
+*.pyc
+
+eisegTest/
+
+*.png

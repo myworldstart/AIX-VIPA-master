@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI + X</title>
+    <link href="{{ url_for('static',filename='imgs/zjuicon.png')}}" rel="icon">
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/bootstrap-select.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/style.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap-select.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/echarts.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/dataset.js')}}"></script>
+</head>
+<body>
+{% block nav %}
+<!--navbar-->
+<div id="header" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+
+    <div id="body" class="container padt">
+        <div class="container-fluid col-lg-12">
+            <h2>Let's build a model in three steps</h2>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+</body>
+</html>
