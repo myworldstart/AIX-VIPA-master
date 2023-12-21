@@ -17,9 +17,9 @@ class Detector(object):
 
     def init_model(self):
         #TODO
-        # self.weights = 'weights/final.pt'
-        self.weights = 'weights/yolov5s60.pt'
-        # self.weights = 'weights/yolov5s_pig.pt'
+        # self.weights = './yolo/weights/final.pt'
+        self.weights = './yolo/weights/yolov5s60.pt'
+        # self.weights = './yolo/weights/yolov5s_pig.pt'
         
         self.device = '0' if torch.cuda.is_available() else 'cpu'
         self.device = select_device(self.device)
