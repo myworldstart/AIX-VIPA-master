@@ -17,7 +17,7 @@ def index():
 
 
 # todo: can't move to top of this file?
-from . import anno_auto_test, anno_auto_train, data_info, eiseg_click, anno_auto_tradition, sam_click, sam_predict
+from . import anno_auto_test, anno_auto_train, data_info, eiseg_click, anno_auto_tradition, sam_click, sam_predict, yolo_detect
 
 # register blueprint here
 app.register_blueprint(anno_auto_test.bp)
@@ -27,6 +27,7 @@ app.register_blueprint(eiseg_click.bp)
 app.register_blueprint(anno_auto_tradition.bp)
 app.register_blueprint(sam_click.bp)
 app.register_blueprint(sam_predict.bp)
+app.register_blueprint(yolo_detect.bp)
 
 # load models
 seek_gpu()
