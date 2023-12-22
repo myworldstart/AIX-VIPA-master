@@ -4,7 +4,7 @@ import os
 import shutil
 from datetime import timedelta
 from flask import Blueprint, jsonify, request, send_from_directory, make_response
-from yolo_predict import Detector
+from .yolo_predict import Detector
 import cv2
 
 UPLOAD_FOLDER = r'./uploads'
@@ -12,14 +12,14 @@ UPLOAD_FOLDER = r'./uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 # app = Flask(__name__)
 bp = Blueprint('yolo', __name__)
-bp.secret_key = 'secret!'
-bp.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# bp.secret_key = 'secret!'
+# bp.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-werkzeug_logger = rel_log.getLogger('werkzeug')
-werkzeug_logger.setLevel(rel_log.ERROR)
+# werkzeug_logger = rel_log.getLogger('werkzeug')
+# werkzeug_logger.setLevel(rel_log.ERROR)
 
 # 解决缓存刷新问题
-bp.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+# bp.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 
 def pre_process(data_path):
     file_name = os.path.split(data_path)[1].split('.')[0]
@@ -60,7 +60,8 @@ def upload_file():
     file = request.files['file']
     print(datetime.datetime.now(), file.filename)
     if file and allowed_file(file.filename):
-        src_path = os.path.join(bp.config['UPLOAD_FOLDER'], file.filename)
+        src_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        # src_path = os.path.join(bp.config['UPLOAD_FOLDER'], file.filename)
         file.save(src_path)
         shutil.copy(src_path, './tmp/ct')
         image_path = os.path.join('./tmp/ct', file.filename)

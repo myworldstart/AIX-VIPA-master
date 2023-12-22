@@ -4,6 +4,8 @@ from geventwebsocket.handler import WebSocketHandler
 import sys
 from asm.utils import seek_gpu
 
+sys.path.append("yolo")
+
 server = pywsgi.WSGIServer(('10.214.211.207', 5088), app, handler_class=WebSocketHandler)
 app.run(
     host='10.214.211.207',

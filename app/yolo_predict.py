@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from yolo.experimental import attempt_load
+from yolo.models.experimental import attempt_load
 from yolo.utils.general import non_max_suppression, scale_coords, letterbox
 from yolo.utils.torch_utils import select_device
 import cv2
@@ -18,11 +18,12 @@ class Detector(object):
     def init_model(self):
         #TODO
         # self.weights = './yolo/weights/final.pt'
-        self.weights = './yolo/weights/yolov5s60.pt'
+        self.weights = 'yolo/weights/yolov5s60.pt'
         # self.weights = './yolo/weights/yolov5s_pig.pt'
         
         self.device = '0' if torch.cuda.is_available() else 'cpu'
         self.device = select_device(self.device)
+        self.device = 'cpu'
         model = attempt_load(self.weights, map_location=self.device)
         model.to(self.device).eval()
 
