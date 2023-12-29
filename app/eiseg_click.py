@@ -1,18 +1,16 @@
 import io
 import json
 
-import numpy as np
 import paddle
 import sys
 
+from PIL.Image import Image
 from matplotlib import pyplot as plt
 
-sys.path.append('/home/xjb/code/AIX')
 import urllib.request
 from asm.predict import *
 from flask import Blueprint, jsonify
 from flask.globals import request
-from asm.utils import map_docker2host
 from eiseg.models import EISegModel
 from eiseg.controller import InteractiveController
 
@@ -44,8 +42,8 @@ def show_points(coords, labels, ax, marker_size=375):
 @bp.route('/eiseg', methods=['POST'])
 @paddle.no_grad()
 def click_test():
-    control.model = EISegModel('/nfs/xjb/weights/static_hrnet18_ocr64_cocolvis.pdmodel',
-                               '/nfs/xjb/weights/static_hrnet18_ocr64_cocolvis.pdiparams')
+    control.model = EISegModel('/home/disk1/xjb/code/python/project/aix/weight/static_hrnet18_ocr64_cocolvis.pdmodel',
+                               '/home/disk1/xjb/code/python/project/aix/weight/static_hrnet18_ocr64_cocolvis.pdiparams')
     # ------------------------------------------------------------------------------------------------------
     # control.reset_predictor()
     # ----------------------------------------------------------------------------------------

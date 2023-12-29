@@ -1,12 +1,11 @@
 from app import app
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
-import sys
 from asm.utils import seek_gpu
 
-server = pywsgi.WSGIServer(('10.214.211.207', 5088), app, handler_class=WebSocketHandler)
+server = pywsgi.WSGIServer(('127.0.0.1', 5088), app, handler_class=WebSocketHandler)
 app.run(
-    host='10.214.211.207',
+    host='127.0.0.1',
     port=5088,
     debug=True,
     threaded=True,

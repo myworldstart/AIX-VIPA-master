@@ -6,9 +6,7 @@
 
 import numpy as np
 import torch
-import sys
-sys.path.append('/home/disk1/xjb/code/python/project/aix/asm/net/segment_anything')
-from modeling import Sam
+from asm.net.segment_anything.modeling import Sam
 
 from typing import Optional, Tuple
 

@@ -1,15 +1,9 @@
-import copy
-
-import numpy as np
-import torch
 import matplotlib.pyplot as plt
 import cv2
 import sys
-sys.path.append("/home/disk1/xjb/code/python/project/aix/asm/net")
-sys.path.append("/home/disk1/xjb/code/python/project/aix/asm")
 
-from segment_anything import sam_model_registry, SamPredictor
-from config import ModelSet
+
+from asm.net.segment_anything import sam_model_registry, SamPredictor
 import io
 import json
 import paddle
@@ -17,10 +11,7 @@ import urllib.request
 from asm.predict import *
 from flask import Blueprint, jsonify
 from flask.globals import request
-from asm.utils import map_docker2host
-from eiseg.models import EISegModel
-from eiseg.controller import InteractiveController
-from asm.sam_utils import sam_find_board_V2, sam_find_board_V3, sam_find_board_V4
+from asm.sam_utils import sam_find_board_V3, sam_find_board_V4
 
 bp = Blueprint('sam_click', __name__)
 
@@ -54,10 +45,10 @@ def click_test():
     # input_point, img_path, input_label, input_box = request.json.get('click_list'), request.json.get('img_path'), request.json.get('label'), request.json.get('box')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if('box' in request.json):
-        input_point, img_path, input_label, input_boxes = torch.tensor(request.json.get('click_list'), device=device), request.json.get('img_path'), torch.tensor(request.json.get('label'), device=device), torch.tensor(request.json.get('box'), device=device)
+        img_path, input_boxes = request.json.get('img_path'), torch.tensor(request.json.get('box'), device=device)
     else:
         # input_point, img_path, input_label = torch.tensor(request.json.get('click_list'), device=device), request.json.get('img_path'), torch.tensor(request.json.get('label'), device=device)
-        input_point, img_path, input_label = np.array(request.json.get('click_list')), request.json.get('img_path'), np.array(request.json.get('label'))
+        input_point, img_path= request.json.get('click_list'), request.json.get('img_path')
         # input_point = input_point.squeeze(1)
         # input_label = input_label.squeeze(1)
         input_boxes = None
@@ -110,9 +101,21 @@ def click_test():
         # print(input_label.shape)
         # point = input_point.to("cpu").numpy()
         # label = input_label.to("cpu").numpy()
+        point = []
+        label = []
+        for click in input_point:
+            x = click['x']
+            y = click['y']
+            if(click['positive']):
+                label.append(1)
+            else:
+                label.append(0)
+            point.append([x, y])
+        point = np.array(point)
+        label = np.array(label)
         masks, _, _ = predictor.predict(
-            point_coords=input_point,
-            point_labels=input_label,
+            point_coords=point,
+            point_labels=label,
             multimask_output=False,
         )
         # --------------------------------------------------------
@@ -120,7 +123,7 @@ def click_test():
         plt.figure(figsize=(10, 10))
         plt.imshow(image)
         show_mask(masks, plt.gca())
-        show_points(input_point, input_label, plt.gca())
+        # show_points(input_point, input_label, plt.gca())
         plt.axis('off')
         plt.show()
         print(masks)  # output: (1, 600, 900)

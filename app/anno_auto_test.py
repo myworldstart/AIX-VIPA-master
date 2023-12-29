@@ -2,9 +2,12 @@ import io
 import json
 import time
 import hashlib
+
+from PIL.Image import Image
 from flask import Blueprint, jsonify
 from flask.globals import request
 from sqlalchemy import text
+from tqdm import tqdm
 
 from app.db import connect_redis, query_d_hits, parse_row_to_dict
 from asm.predict import *

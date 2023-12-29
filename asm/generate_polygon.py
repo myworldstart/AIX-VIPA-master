@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 import cv2
 import numpy as np
 import math
-# from asm.utils import fillHole
+# from asm.semantic_utils import fillHole
 
 
 def get_polygon(label, sample="Dynamic"):

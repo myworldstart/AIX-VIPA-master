@@ -1,9 +1,5 @@
-from IPython.display import display, HTML
-import numpy as np
-import torch
-import paddle
-import matplotlib.pyplot as plt
 import cv2
+import matplotlib.pyplot as plt
 import io
 import json
 import time
@@ -12,20 +8,20 @@ from flask import Blueprint, jsonify
 from flask.globals import request
 from sqlalchemy import text
 import sys
-sys.path.append("/home/disk1/xjb/code/python/project/aix/asm")
 
-from config import ModelSet
+from tqdm import tqdm
+
+
 from app.db import db, connect_redis, query_d_hits, parse_row_to_dict
 from asm.predict import *
 import urllib.request
 from time import time
-from app import app
 from asm.utils import map_docker2host, Board2Path
 from datetime import datetime
 from asm.sam_utils import sam_find_board_V2
 import sys
 sys.path.append("..")
-from asm.net.segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
+from asm.net.segment_anything import sam_model_registry, SamAutomaticMaskGenerator
 
 bp = Blueprint('sam_predict', __name__)
 

@@ -62,7 +62,8 @@ def sam_find_board_V4(masks):
     res_cur = []
     boards = []
     img_signal_cat = deepcopy(masks)
-    img_signal_cat = img_signal_cat.squeeze(0)
+    # if(masks.ndim > 2):
+    #     img_signal_cat = img_signal_cat.squeeze(0)
     print(img_signal_cat.shape)
     print(type(img_signal_cat))
     # print(img_signal_cat.shape)

@@ -1,57 +1,75 @@
-from IPython.display import display, HTML
+import cv2 as cv
 import numpy as np
-import torch
-import matplotlib.pyplot as plt
-import cv2
-import sys
-sys.path.append("/home/disk1/xjb/code/python/project/aix/asm/net")
-from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
+from PIL import Image
+from matplotlib import pyplot as plt
+from torch import nn
 
-def show_anns(anns):
-    if len(anns) == 0:
-        return
-    sorted_anns = sorted(anns, key=(lambda x: x['area']), reverse=True)
-    ax = plt.gca()
-    ax.set_autoscale_on(False)
+def AddNoise(imarray, probility=0.05, method="salt_pepper"):  # 灰度图像
+    #获取图片的长和宽
+    height, width = imarray.shape[:2]
 
-    img = np.ones((sorted_anns[0]['segmentation'].shape[0], sorted_anns[0]['segmentation'].shape[1], 4))
-    print(sorted_anns[0]['segmentation'].shape[0], sorted_anns[0]['segmentation'].shape[1])
-    img[:,:,3] = 0
-    for ann in sorted_anns:
-        m = ann['segmentation']
-        color_mask = np.concatenate([np.random.random(3), [0.35]])
-        img[m] = color_mask
-    ax.imshow(img)
+    for i in range(height):
+        for j in range(width):
+            if np.random.random(1) < probility:  # 随机加盐或者加椒
+                if np.random.random(1) < 0.5:
+                    imarray[i, j] = 0
+                else:
+                    imarray[i, j] = 255
+    return imarray
 
-image = cv2.imread('/home/disk1/xjb/code/python/project/aix/ww.jpg')
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+def auto_median_filter(image, max_size):
+    origen = 3                                                        # 初始窗口大小
+    board = origen//2                                                 # 初始应扩充的边界
+    # max_board = max_size//2                                         # 最大可扩充的边界
+    copy = cv.copyMakeBorder(image, *[board]*4, borderType=cv.BORDER_DEFAULT)         # 扩充边界
+    out_img = np.zeros(image.shape)
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            def sub_func(src, size):                         # 两个层次的子函数
+                kernel = src[i:i+size, j:j+size]
+                # print(kernel)
+                z_med = np.median(kernel)
+                z_max = np.max(kernel)
+                z_min = np.min(kernel)
+                if z_min < z_med < z_max:                                 # 层次A
+                    if z_min < image[i][j] < z_max:                       # 层次B
+                        return image[i][j]
+                    else:
+                        return z_med
+                else:
+                    next_size = cv.copyMakeBorder(src, *[1]*4, borderType=cv.BORDER_DEFAULT)   # 增尺寸
+                    size = size+2                                        # 奇数的核找中值才准确
+                    if size <= max_size:
+                        return sub_func(next_size, size)     # 重复层次A
+                    else:
+                        return z_med
+            out_img[i][j] = sub_func(copy, origen)
+    return out_img
 
-plt.figure(figsize=(20,20))
-plt.imshow(image)
-plt.axis('off')
+
+
+img = cv.imread("/home/disk1/xjb/code/python/project/aix/1.jpg")
+img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+# print(img.shape)
+# plt.figure(figsize=(10, 10))
+# plt.imshow(img)
+# plt.title('彩色图')
+# plt.show()
+# img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+# plt.figure(figsize=(10, 10))
+# plt.imshow(img, cmap='gray')
+# plt.title('灰度图')
+# print(img.shape)
+# plt.show()
+# img = AddNoise(img)
+# print(img)
+# plt.figure(figsize=(10, 10))
+# plt.imshow(img, cmap='gray')
+# plt.title('灰度图')
+# plt.show()
+img = auto_median_filter(img, 2)
+plt.figure(figsize=(10, 10))
+plt.imshow(img, cmap='gray')
 plt.show()
 
 
-sam_checkpoint = "/nfs/xjb/weights/sam_vit_h_4b8939.pth"
-model_type = "vit_h"
-
-device = "cuda:1"
-
-sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
-sam.to(device=device)
-
-mask_generator = SamAutomaticMaskGenerator(sam)
-
-masks = mask_generator.generate(image)
-
-print(image.shape)
-print(len(masks))
-print(masks[0].keys())
-print(masks[1]['segmentation'].shape)
-plt.figure(figsize=(20,20))
-print(image.shape[0])
-plt.imshow(image)
-show_anns(masks)
-plt.axis('off')
-plt.show()
-plt.close()

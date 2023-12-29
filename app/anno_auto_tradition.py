@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-from flask import Blueprint, session, Flask, g, jsonify
-from datetime import datetime
-from app import app
-from flask_sockets import Sockets
+from flask import Blueprint, jsonify
+from datetime import datetime, time
 from flask.globals import request
-from config import SAVE_MODEL_DIR
-from app.db import db, valid_userId
+from app.db import valid_userId
 from asm.predict import *
 from PIL import Image
 import ast
@@ -18,7 +15,6 @@ from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import tree
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.naive_bayes import BernoulliNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from skimage.feature import hog

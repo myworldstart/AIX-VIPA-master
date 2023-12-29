@@ -14,7 +14,11 @@ PERMANENT_SESSION_LIFETIME = timedelta(hours=1)        # session有效时间
 # HOST_UPLOADS = 'http://10.214.211.207:3030/uploads'
 HOST_UPLOADS = 'http://10.214.211.207:3030/uploads'
 # database
-host = '10.214.211.207'
+# host = '10.214.211.207'
+# port = 3366
+# db = 'hope'
+# username, password = 'root', '123456'
+host = '127.0.0.1'
 port = 3366
 db = 'hope'
 username, password = 'root', '123456'
@@ -73,9 +77,19 @@ ModelSet = {
         'source': '车辆数据集',
     },
     'SAM':{
-        'weight': '/nfs/xjb/weights/sam_vit_h_4b8939.pth',
+        'weight': '/home/disk1/xjb/code/python/project/aix/weight/sam_vit_h_4b8939.pth',
         'type': 'segmentation',
         'model_type': 'vit_h',
+    },
+    'HQ_SAM': {
+        'weight': '/home/disk1/xjb/code/python/project/aix/weight/sam_hq_vit_l.pth',
+        'type': 'segmentation',
+        'model_type': 'vit_l',
+    },
+    'Semantic_SAM': {
+        'weight': '/home/disk1/xjb/code/python/project/aix/weight/swinl_only_sam_many2many.pth',
+        'type': 'segmentation',
+        'model_type': 'L'
     }
 }
 
